@@ -4,7 +4,7 @@ const {
   CreatLaporan,
   updatLaporan,
   getAll,
-  deleteLaporan
+  deletLaporan
 } = require("../../../services/mongose/Laporan");
 
 const create = async (req, res, next) => {
