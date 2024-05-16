@@ -16,7 +16,7 @@ const getAllOrders = async (req) => {
   // .populate("jadwal")
   // .populate("penyewa")
   // .exec();
-  const count = await totalOrders()
+  const count = await totalOrders();
 
   return { data: result, pages: Math.ceil(count / limit) || 0, total: count };
 };
@@ -57,26 +57,37 @@ const updateStatusSukses = async (req) => {
     { new: true, runValidators: true }
   );
   if (result.status === "sukses") {
-    try {
-      const totalPemasukanSemuaOrderSukses = await Order.aggregate([
-        { $match: { status: "sukses" } },
-        { $group: { _id: null, total: { $sum: "$total" } } },
-      ]);
-      const [{ total }] = totalPemasukanSemuaOrderSukses;
-      const creatLaporan = {
-        date: new Date(),
-        desc: "Order",
-        pemasukan: result.total,
-        pengeluaran: 0,
-        totalPemasukan: total > 0 ? total : 0,
-        totalPengeluaran: 0,
-      };
+    const check = await Laporan.findOne({ desc: result.NumberOrder });
+    if (check) throw new BadRequestError400("Tipe Laporan Order duplikat");
 
-      const hasil = await Laporan.create(creatLaporan);
-      console.log(hasil, "hasil");
-    } catch (error) {
-      console.log(error);
-    }
+    const totalPemasukanSemuaOrder = await Laporan.aggregate([
+      { $group: { _id: null, pemasukan: { $sum: "$pemasukan" } } },
+    ]);
+    const totalPemasukan =
+      totalPemasukanSemuaOrder.length > 0
+        ? totalPemasukanSemuaOrder[0].pemasukan
+        : 0;
+
+    // Add the new order's income to the total income
+    const updatedTotalPemasukan = totalPemasukan + result.total;
+
+    // const [{ pemasukan }] = totalPemasukanSemuaOrder;
+
+    // // Add the new order's income to the total income
+    // const updatedTotalPemasukan = pemasukan + result.total;
+    // console.log(updatedTotalPemasukan , "total");
+
+    // console.log(pemasukan);
+    const creatLaporan = {
+      date: new Date(),
+      desc: result.NumberOrder,
+      pemasukan: result.total,
+      pengeluaran: 0,
+      totalPemasukan: updatedTotalPemasukan ? updatedTotalPemasukan : 0,
+      totalPengeluaran: 0,
+    };
+    const hasil = await Laporan.create(creatLaporan);
+    console.log(hasil, "hasil");
   }
   return result;
 };
