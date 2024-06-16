@@ -26,7 +26,7 @@ const OrderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "sukses","gagal"],
+      enum: ["pending", "sukses","gagal","uang muka"],
       default: "pending",
     },
     pelanggan: {
@@ -88,7 +88,6 @@ const OrderSchema = new mongoose.Schema(
       },
       waktu: {
         type: String,
-        enum: ["pagi", "siang", "malam"],
         required: [
           true,
           'Waktu harus diisi dan bernilai "pagi", "siang", atau "malam"',

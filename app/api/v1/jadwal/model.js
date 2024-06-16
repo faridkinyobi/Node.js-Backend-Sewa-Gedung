@@ -11,7 +11,6 @@ const JadwalSchema = new mongoose.Schema(
         },
         waktu: {
             type: String,
-            enum: ['pagi', 'siang', 'malam'],
             required: [true, 'Waktu harus diisi '],
         },
         lama_sewa: {

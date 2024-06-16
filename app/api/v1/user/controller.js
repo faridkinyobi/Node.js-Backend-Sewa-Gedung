@@ -1,11 +1,13 @@
 const { StatusCodes } = require("http-status-codes");
 const {
-  CreatUser,
+  changPasswordUser,
   getAllUser,
+  updateUser,
   getOneUser,
   deletUser,
   createUsers,
   getAllPelanggan,
+  getTotalPenyewa
 } = require("../../../services/mongose/user");
 
 const signupAdmin = async (req, res, next) => {
@@ -20,21 +22,41 @@ const signupAdmin = async (req, res, next) => {
   }
 };
 
-// const update = async (req,res,next) =>{
-//     try {
-
-//         const result = await updatePenyewa(req);
-//         res.status(StatusCodes.OK).json({
-//             data: result,
-//             msg:"successfully"
-//         });
-//     } catch (err) {
-//         next(err)
-//     }
-// }
+const changPassword = async (req, res, next) => {
+  try {
+    const result = await changPasswordUser(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+      msg: "successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+const update = async (req, res, next) => {
+  try {
+    const result = await updateUser(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+      msg: "successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 const getAllPel = async (req, res, next) => {
   try {
     const result = await getAllPelanggan(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+const getTotal = async (req, res, next) => {
+  try {
+    const result = await getTotalPenyewa(req);
     res.status(StatusCodes.OK).json({
       data: result,
     });
@@ -81,4 +103,8 @@ module.exports = {
   getAll,
   getAllPel,
   delet,
+  changPassword,
+  update,
+  getOne,
+  getTotal
 };

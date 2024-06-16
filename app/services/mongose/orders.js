@@ -1,6 +1,7 @@
 const Order = require("../../api/v1/order/model");
 const Laporan = require("../../api/v1/laporan/model");
-
+const {CreatLaporanPemasukanDP,CreatPemasukanLunas}   = require("./Laporan")
+const { BadRequestError400, NotFoundError404 } = require("../../error");
 const getAllOrders = async (req) => {
   const { keyword, limit = 10, page = 1 } = req.query;
   let query = {};
@@ -20,23 +21,22 @@ const getAllOrders = async (req) => {
 
   return { data: result, pages: Math.ceil(count / limit) || 0, total: count };
 };
+const totalOrders = async (req) => {
+  const result = await Order.countDocuments();
+  return result;
+};
 
 const getAllOrdersStatus = async (req) => {
   const result = await Order.find({ status: "pending" });
   return result;
 };
 
-const totalOrders = async (req) => {
-  const result = await Order.countDocuments();
+const totalStatusSukses = async (req) => {
+  const result = await Order.countDocuments({ status: "sukses" });
   return result;
 };
 
-const totalPembayaran = async (req) => {
-  const result = await Order.countDocuments({ status: "transfer" });
-  return result;
-};
-
-const totalPending = async (req) => {
+const totalStatusPending = async (req) => {
   // const result = await Order.find()
   const result = await Order.countDocuments({ status: "pending" });
   return result;
@@ -44,7 +44,6 @@ const totalPending = async (req) => {
 
 const updateStatusSukses = async (req) => {
   const { id } = req.params;
-
   const check = await Order.findOne({ _id: id });
 
   if (!check) throw new NotFoundError404(`Tidak ada jadwal dengan ID ${id}`);
@@ -57,37 +56,48 @@ const updateStatusSukses = async (req) => {
     { new: true, runValidators: true }
   );
   if (result.status === "sukses") {
-    const check = await Laporan.findOne({ desc: result.NumberOrder });
-    if (check) throw new BadRequestError400("Tipe Laporan Order duplikat");
+    await CreatPemasukanLunas(req,result)
+    // const check = await Laporan.findOne({ desc: result.NumberOrder });
+    // if (check) throw new BadRequestError400("Tipe Laporan Order duplikat");
 
-    const totalPemasukanSemuaOrder = await Laporan.aggregate([
-      { $group: { _id: null, pemasukan: { $sum: "$pemasukan" } } },
-    ]);
-    const totalPemasukan =
-      totalPemasukanSemuaOrder.length > 0
-        ? totalPemasukanSemuaOrder[0].pemasukan
-        : 0;
+    // const totalPemasukanSemuaOrder = await Laporan.aggregate([
+    //   { $group: { _id: null, pemasukan: { $sum: "$pemasukan" } } },
+    // ]);
+    // const totalPemasukan =
+    //   totalPemasukanSemuaOrder.length > 0
+    //     ? totalPemasukanSemuaOrder[0].pemasukan
+    //     : 0;
 
-    // Add the new order's income to the total income
-    const updatedTotalPemasukan = totalPemasukan + result.total;
+    // const updatedTotalPemasukan = totalPemasukan + result.total;
 
-    // const [{ pemasukan }] = totalPemasukanSemuaOrder;
+    // const creatLaporan = {
+    //   date: new Date(),
+    //   petugas: req.user.name ,
+    //   desc: result.NumberOrder,
+    //   pemasukan: result.total,
+    //   pengeluaran: 0,
+    //   Saldo: updatedTotalPemasukan ? updatedTotalPemasukan : 0,
+    // };
+    // const hasil = await Laporan.create(creatLaporan);
+    // console.log(hasil, "hasil");
+  }
+  return result;
+};
+const updateStatusUangDP = async (req) => {
+  const { id } = req.params;
+  const check = await Order.findOne({ _id: id });
 
-    // // Add the new order's income to the total income
-    // const updatedTotalPemasukan = pemasukan + result.total;
-    // console.log(updatedTotalPemasukan , "total");
+  if (!check) throw new NotFoundError404(`Tidak ada jadwal dengan ID ${id}`);
 
-    // console.log(pemasukan);
-    const creatLaporan = {
-      date: new Date(),
-      desc: result.NumberOrder,
-      pemasukan: result.total,
-      pengeluaran: 0,
-      totalPemasukan: updatedTotalPemasukan ? updatedTotalPemasukan : 0,
-      totalPengeluaran: 0,
-    };
-    const hasil = await Laporan.create(creatLaporan);
-    console.log(hasil, "hasil");
+  const result = await Order.findOneAndUpdate(
+    { _id: id },
+    {
+      status: "uang muka",
+    },
+    { new: true, runValidators: true }
+  );
+  if (result.status === "uang muka") {
+    await CreatLaporanPemasukanDP(result, req)
   }
   return result;
 };
@@ -118,10 +128,11 @@ const deletOrder = async (req) => {
 module.exports = {
   getAllOrders,
   totalOrders,
-  totalPending,
+  totalStatusPending,
   getAllOrdersStatus,
   updateStatusGagal,
   updateStatusSukses,
-  totalPembayaran,
+  totalStatusSukses,
   deletOrder,
+  updateStatusUangDP,
 };

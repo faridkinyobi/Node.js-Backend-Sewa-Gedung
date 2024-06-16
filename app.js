@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // catch 404 and forward to error handler
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "wellcom to event",
+    message: "wellcom to gedung",
   });
 });
 

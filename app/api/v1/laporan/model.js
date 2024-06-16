@@ -6,6 +6,10 @@ let LaporanSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    petugas: {
+        type: String,
+        required: true,
+      },
     desc: {
         type: String,
       },
@@ -16,12 +20,9 @@ let LaporanSchema = new mongoose.Schema(
     pengeluaran: {
       type: Number,
     },
-    totalPemasukan: {
+    Saldo: {
       type: Number,
       required: true,
-    },
-    totalPengeluaran: {
-      type: Number,
     },
   },
   { timestamps: true }

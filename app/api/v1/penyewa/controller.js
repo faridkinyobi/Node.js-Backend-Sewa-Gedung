@@ -5,7 +5,6 @@ const {
   getOnePenyewa,
   updatePenyewa,
   deletPenyewa,
-  getTotalPenyewa,
 } = require("../../../services/mongose/penyewa");
 
 const Creat = async (req, res, next) => {
@@ -40,17 +39,6 @@ const getAll = async (req, res, next) => {
     next(err);
   }
 };
-const getTotal = async (req, res, next) => {
-  try {
-    const result = await getTotalPenyewa(req);
-    res.status(StatusCodes.OK).json({
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
 const getOne = async (req, res, next) => {
   try {
     const result = await getOnePenyewa(req);
@@ -79,5 +67,4 @@ module.exports = {
   getAll,
   update,
   delet,
-  getTotal
 };

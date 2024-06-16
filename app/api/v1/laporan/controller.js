@@ -1,15 +1,15 @@
 const { StatusCodes } = require("http-status-codes");
 const {
   getOneLaporan,
-  CreatLaporan,
+  CreatPengeluaran,
   updatLaporan,
   getAll,
-  deleteLaporan
+  deletLaporan,
 } = require("../../../services/mongose/Laporan");
 
 const create = async (req, res, next) => {
   try {
-    const result = await CreatLaporan(req);
+    const result = await CreatPengeluaran(req);
     res.status(StatusCodes.CREATED).json({
       data: result,
       msg: "successfully",
@@ -18,7 +18,6 @@ const create = async (req, res, next) => {
     next(err);
   }
 };
-
 
 const getOne = async (req, res, next) => {
   try {
@@ -47,7 +46,14 @@ const index = async (req, res, next) => {
   try {
     const result = await getAll(req);
     res.status(StatusCodes.OK).json({
-      data: result,
+      data: {
+        data: result.data,
+        pages: result.pages,
+        total: result.total,
+        totalDebit: result.totalDebit,
+        totalKredit: result.totalKredit,
+        saldo: result.saldo,
+      },
     });
   } catch (err) {
     next(err);
@@ -64,12 +70,11 @@ const destroy = async (req, res, next) => {
   }
 };
 
-
 module.exports = {
   create,
   getOne,
   index,
   getOne,
   destroy,
-  update
+  update,
 };

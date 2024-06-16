@@ -9,9 +9,11 @@ const {
   getOnePaket,
   getAllDasboardPembayaran,
   getOneharga,
+  UpdatePasswordPelanggan,
+  activatePelanggan,
+  forgotPassword,
+  resetPassword
 } = require("../../../services/mongose/Pelanggan");
-
-
 
 const signup = async (req, res, next) => {
   try {
@@ -25,6 +27,17 @@ const signup = async (req, res, next) => {
   }
 };
 
+const changPasswordPelanggan = async (req, res, next) => {
+  try {
+    const result = await UpdatePasswordPelanggan(req);
+    res.status(StatusCodes.CREATED).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const signin = async (req, res, next) => {
   try {
     const result = await signinPelanggan(req);
@@ -32,6 +45,37 @@ const signin = async (req, res, next) => {
     res.status(StatusCodes.CREATED).json({
       data: result,
       msg: "successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const activePelanggan= async (req, res, next) => {
+  try {
+    const result = await activatePelanggan(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+const resetPasswordPelanggan= async (req, res, next) => {
+  try {
+    const result = await resetPassword(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+const forgotPasswordPelanggan= async (req, res, next) => {
+  try {
+    const result = await forgotPassword(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
   } catch (err) {
     next(err);
@@ -107,9 +151,11 @@ const getPelangganPembayaran = async (req, res, next) => {
 
 const getharga = async (req, res, next) => {
   try {
-    const result = await getOneharga(req);
+    const { paketId, hargaCetagoriId } = req.body;
+
+    const result = await getOneharga(paketId, hargaCetagoriId);
     res.status(StatusCodes.OK).json({
-      data: result,
+      data: result.checkHarga,
     });
   } catch (err) {
     next(err);
@@ -137,4 +183,8 @@ module.exports = {
   getOne,
   getPelangganPembayaran,
   getharga,
+  changPasswordPelanggan,
+  activePelanggan,
+  forgotPasswordPelanggan,
+  resetPasswordPelanggan
 };

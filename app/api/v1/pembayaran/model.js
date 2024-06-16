@@ -5,7 +5,6 @@ const PembayaranSchema = new mongoose.Schema(
     pelanggan: {
       type: mongoose.Types.ObjectId,
       ref: "Pelanggan",
-      required: true,
     },
     Order: {
       type: mongoose.Types.ObjectId,

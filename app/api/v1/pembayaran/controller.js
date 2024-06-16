@@ -6,6 +6,8 @@ const {
   getOnePembayaran,
   updatePembayaran,
   deletePembayaran,
+  updatePelanggan,
+  createPembayaranPelanggan,
 } = require('../../../services/mongose/Pembayaran');
 
 const create = async (req, res, next) => {
@@ -20,10 +22,21 @@ const create = async (req, res, next) => {
   }
 };
 
+const createpembayranPelanggan = async (req, res, next) => {
+  try {
+    const result = await createPembayaranPelanggan(req);
+
+    res.status(StatusCodes.CREATED).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const index = async (req, res, next) => {
   try {
     const result = await getAllPembayaran(req);
-    console.log(result)
     res.status(StatusCodes.OK).json({
       data: result,
     });
@@ -57,6 +70,17 @@ const update = async (req, res, next) => {
     next(err);
   }
 };
+const updateaPembayaran = async (req, res, next) => {
+  try {
+    const result = await updatePelanggan(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const destroy = async (req, res, next) => {
   try {
@@ -75,4 +99,6 @@ module.exports = {
   update,
   destroy,
   create,
+  updateaPembayaran,
+  createpembayranPelanggan
 };
