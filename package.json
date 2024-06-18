@@ -2,9 +2,7 @@
   "name": "backend",
   "version": "0.0.1",
   "private": true,
-  "engines":{
-    "node": "20.x",
-  },
+  "main": "app.js",
   "scripts": {
     "start": "node ./bin/www",
     "dev": "node ./bin/www"
