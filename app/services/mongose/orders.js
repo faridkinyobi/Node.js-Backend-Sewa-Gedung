@@ -17,7 +17,7 @@ const getAllOrders = async (req) => {
   // .populate("jadwal")
   // .populate("penyewa")
   // .exec();
-  const count = await totalOrders();
+  const count = await totalOrders()
 
   return { data: result, pages: Math.ceil(count / limit) || 0, total: count };
 };
@@ -57,29 +57,6 @@ const updateStatusSukses = async (req) => {
   );
   if (result.status === "sukses") {
     await CreatPemasukanLunas(req,result)
-    // const check = await Laporan.findOne({ desc: result.NumberOrder });
-    // if (check) throw new BadRequestError400("Tipe Laporan Order duplikat");
-
-    // const totalPemasukanSemuaOrder = await Laporan.aggregate([
-    //   { $group: { _id: null, pemasukan: { $sum: "$pemasukan" } } },
-    // ]);
-    // const totalPemasukan =
-    //   totalPemasukanSemuaOrder.length > 0
-    //     ? totalPemasukanSemuaOrder[0].pemasukan
-    //     : 0;
-
-    // const updatedTotalPemasukan = totalPemasukan + result.total;
-
-    // const creatLaporan = {
-    //   date: new Date(),
-    //   petugas: req.user.name ,
-    //   desc: result.NumberOrder,
-    //   pemasukan: result.total,
-    //   pengeluaran: 0,
-    //   Saldo: updatedTotalPemasukan ? updatedTotalPemasukan : 0,
-    // };
-    // const hasil = await Laporan.create(creatLaporan);
-    // console.log(hasil, "hasil");
   }
   return result;
 };
