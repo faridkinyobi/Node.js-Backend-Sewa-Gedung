@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const db = require("./app/db/index")
 
 const app = express();
 const PenyewaRouter = require("./app/api/v1/penyewa/router");
@@ -32,9 +33,15 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // catch 404 and forward to error handler
 app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "wellcom to gedung",
-  });
+  if (db.readyState !== 1) { // Check if the connection is not established
+    res.status(500).json({
+      message: "MongoDB connection error"
+    });
+  } else {
+    res.status(200).json({
+      message: "Welcome to gedung",
+    });
+  }
 });
 
 app.use("/app/v1", PelangganRouter);
