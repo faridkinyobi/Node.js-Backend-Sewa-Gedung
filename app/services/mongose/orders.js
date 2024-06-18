@@ -17,7 +17,7 @@ const getAllOrders = async (req) => {
   // .populate("jadwal")
   // .populate("penyewa")
   // .exec();
-  const count = await totalOrders()
+  const count = await totalOrders();
 
   return { data: result, pages: Math.ceil(count / limit) || 0, total: count };
 };
