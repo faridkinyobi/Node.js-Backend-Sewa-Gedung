@@ -1,6 +1,7 @@
 const Order = require("../../api/v1/order/model");
 const Laporan = require("../../api/v1/laporan/model");
-
+const {CreatLaporanPemasukanDP,CreatPemasukanLunas}   = require("./Laporan")
+const { BadRequestError400, NotFoundError404 } = require("../../error");
 const getAllOrders = async (req) => {
   const { keyword, limit = 10, page = 1 } = req.query;
   let query = {};
@@ -20,23 +21,22 @@ const getAllOrders = async (req) => {
 
   return { data: result, pages: Math.ceil(count / limit) || 0, total: count };
 };
+const totalOrders = async (req) => {
+  const result = await Order.countDocuments();
+  return result;
+};
 
 const getAllOrdersStatus = async (req) => {
   const result = await Order.find({ status: "pending" });
   return result;
 };
 
-const totalOrders = async (req) => {
-  const result = await Order.countDocuments();
+const totalStatusSukses = async (req) => {
+  const result = await Order.countDocuments({ status: "sukses" });
   return result;
 };
 
-const totalPembayaran = async (req) => {
-  const result = await Order.countDocuments({ status: "transfer" });
-  return result;
-};
-
-const totalPending = async (req) => {
+const totalStatusPending = async (req) => {
   // const result = await Order.find()
   const result = await Order.countDocuments({ status: "pending" });
   return result;
@@ -44,7 +44,6 @@ const totalPending = async (req) => {
 
 const updateStatusSukses = async (req) => {
   const { id } = req.params;
-
   const check = await Order.findOne({ _id: id });
 
   if (!check) throw new NotFoundError404(`Tidak ada jadwal dengan ID ${id}`);
@@ -57,26 +56,25 @@ const updateStatusSukses = async (req) => {
     { new: true, runValidators: true }
   );
   if (result.status === "sukses") {
-    try {
-      const totalPemasukanSemuaOrderSukses = await Order.aggregate([
-        { $match: { status: "sukses" } },
-        { $group: { _id: null, total: { $sum: "$total" } } },
-      ]);
-      const [{ total }] = totalPemasukanSemuaOrderSukses;
-      const creatLaporan = {
-        date: new Date(),
-        desc: "Order",
-        pemasukan: result.total,
-        pengeluaran: 0,
-        totalPemasukan: total > 0 ? total : 0,
-        totalPengeluaran: 0,
-      };
+    await CreatPemasukanLunas(req,result)
+  }
+  return result;
+};
+const updateStatusUangDP = async (req) => {
+  const { id } = req.params;
+  const check = await Order.findOne({ _id: id });
 
-      const hasil = await Laporan.create(creatLaporan);
-      console.log(hasil, "hasil");
-    } catch (error) {
-      console.log(error);
-    }
+  if (!check) throw new NotFoundError404(`Tidak ada jadwal dengan ID ${id}`);
+
+  const result = await Order.findOneAndUpdate(
+    { _id: id },
+    {
+      status: "uang muka",
+    },
+    { new: true, runValidators: true }
+  );
+  if (result.status === "uang muka") {
+    await CreatLaporanPemasukanDP(result, req)
   }
   return result;
 };
@@ -107,10 +105,11 @@ const deletOrder = async (req) => {
 module.exports = {
   getAllOrders,
   totalOrders,
-  totalPending,
+  totalStatusPending,
   getAllOrdersStatus,
   updateStatusGagal,
   updateStatusSukses,
-  totalPembayaran,
+  totalStatusSukses,
   deletOrder,
+  updateStatusUangDP,
 };

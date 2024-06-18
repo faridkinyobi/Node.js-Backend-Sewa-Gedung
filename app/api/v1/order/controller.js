@@ -1,9 +1,11 @@
 const {
   getAllOrders,
-  totalPending,
+  totalStatusPending,
+  totalStatusSukses,
   getAllOrdersStatus,
   updateStatusGagal,
   updateStatusSukses,
+  updateStatusUangDP,
   totalOrders,
   deletOrder,
 } = require("../../../services/mongose/orders.js");
@@ -20,31 +22,8 @@ const getAll = async (req, res, next) => {
     next(err);
   }
 };
-const getAlltotalPending = async (req, res, next) => {
-  try {
-    const result = await totalPending(req);
 
-    res.status(StatusCodes.OK).json({
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getAlltotalOrder = async (req, res, next) => {
-  try {
-    const result = await totalOrders(req);
-
-    res.status(StatusCodes.OK).json({
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const Statuspending = async (req, res, next) => {
+const getAllPending = async (req, res, next) => {
   try {
     const result = await getAllOrdersStatus(req);
 
@@ -55,6 +34,30 @@ const Statuspending = async (req, res, next) => {
     next(err);
   }
 };
+const totalSukses = async (req, res, next) => {
+  try {
+    const result = await totalStatusSukses(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const totalPending = async (req, res, next) => {
+  try {
+    const result = await totalStatusPending(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const OrderGagal = async (req, res, next) => {
   try {
     const result = await updateStatusGagal(req);
@@ -75,6 +78,18 @@ const OrderSukses = async (req, res, next) => {
     next(err);
   }
 };
+
+const OrderStatusDP = async (req, res, next) => {
+  try {
+    const result = await updateStatusUangDP(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const delet = async (req, res, next) => {
   try {
     const result = await deletOrder(req);
@@ -88,10 +103,11 @@ const delet = async (req, res, next) => {
 };
 module.exports = {
   getAll,
-  getAlltotalPending,
-  Statuspending,
-  OrderGagal,
-  OrderSukses,
-  getAlltotalOrder,
+  getAllPending,
   delet,
+  OrderGagal,
+  OrderStatusDP,
+  OrderSukses,
+  totalPending,
+  totalSukses
 };

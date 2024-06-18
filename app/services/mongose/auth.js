@@ -30,6 +30,7 @@ const signin = async (req) => {
   const token = jwt.sign(payload, config.jwtSecret, {
     expiresIn: config.jwtExpiration,
   });
+
   //   const refreshToken = createRefreshJWT({ payload: createTokenUser(result) });
   //     await createUserRefreshToken({
   //       refreshToken,

@@ -10,7 +10,7 @@ const PaymentSchema = new mongoose.Schema(
     },
     Number: {
       required: [true, "Nomer Rekening harus diisi"],
-      type: Number,
+      type: String,
       minlength: 2,
       maxlength: 50,
     },

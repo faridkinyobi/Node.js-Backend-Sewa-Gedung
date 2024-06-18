@@ -30,9 +30,22 @@ const createPembayaran = async (req) => {
     Order,
     BuktiUangMuka,
     BuktiPelunasan,
+  });
+  // Simpan order
+  await result.save();
+  return result;
+};
+const createPembayaranPelanggan = async (req) => {
+  const { BuktiUangMuka, BuktiPelunasan, Order } = req.body;
+
+  await checkingImage(BuktiUangMuka);
+
+  const result = new pembayaran({
+    Order,
+    BuktiUangMuka,
+    BuktiPelunasan,
     pelanggan: req.pelanggan.id,
   });
-
   // Simpan order
   await result.save();
   return result;
@@ -54,12 +67,10 @@ const getOnePembayaran = async (req) => {
     ])
     .select("_id status name image");
 
-  if (!result) throw new BadRequestError400("Bukti Pembayaran Belum di Upload");
-
   return result;
 };
 
-const updatePembayaran = async (req) => {
+const updatePelanggan = async (req) => {
   const { BuktiPelunasan } = req.body;
 
   await checkingImage(BuktiPelunasan);
@@ -75,6 +86,35 @@ const updatePembayaran = async (req) => {
 
   const result = await pembayaran.findOneAndUpdate(
     { pelanggan: req.pelanggan.id },
+    { BuktiPelunasan },
+    { new: true, runValidators: true }
+  );
+
+  if (!result) {
+    throw new NotFoundError404(
+      `Tidak ada tipe pembayaran dengan ID pelanggan: ${req.pelanggan.id}`
+    );
+  }
+  return result;
+};
+
+// update khsusu bagain pembayaran admin
+const updatePembayaran = async (req) => {
+  const { BuktiPelunasan,id } = req.body;
+
+  await checkingImage(BuktiPelunasan);
+
+  const check = await pembayaran.find({
+    _id: id,
+  });
+
+  if (!check.length === 0)
+    throw new BadRequestError400(
+      "silahkan Upload bukti Pembayan uang muka terlebih dahulu "
+    );
+
+  const result = await pembayaran.findOneAndUpdate(
+    { id: id },
     { BuktiPelunasan },
     { new: true, runValidators: true }
   );
@@ -118,4 +158,6 @@ module.exports = {
   updatePembayaran,
   deletePembayaran,
   checkingPembayaran,
+  updatePelanggan,
+  createPembayaranPelanggan
 };

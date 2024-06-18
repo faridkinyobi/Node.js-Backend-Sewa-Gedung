@@ -3,12 +3,13 @@ const router = express();
 
 const {
   getAll,
-  getAlltotalPending,
-  Statuspending,
-  OrderGagal,
-  OrderSukses,
-  getAlltotalOrder,
+  getAllPending,
   delet,
+  OrderGagal,
+  OrderStatusDP,
+  OrderSukses,
+  totalPending,
+  totalSukses
 } = require("./controller");
 
 const {
@@ -16,12 +17,13 @@ const {
   authorizeRoles,
 } = require("../../../middlewares/auth");
 
-router.get("/totalPending", getAlltotalPending);
-router.get("/total", getAlltotalOrder);
-router.get("/status", Statuspending);
-router.delete("/order/:id", delet);
-router.put("/statusGagal/:id", OrderGagal);
-router.put("/statusSukses/:id", OrderSukses);
+router.get("/totalPending",authenticateUser, authorizeRoles("admin","super admin"), totalPending);
+router.get("/totalSukses",authenticateUser, authorizeRoles("admin","super admin"), totalSukses);
+router.get("/getAllPending",authenticateUser, authorizeRoles("admin","super admin"), getAllPending);
+router.delete("/order/:id",authenticateUser, authorizeRoles("admin","super admin"), delet);
+router.put("/statusGagal/:id",authenticateUser, authorizeRoles("admin","super admin"), authenticateUser,OrderGagal);
+router.put("/statusSukses/:id", authenticateUser, authorizeRoles("admin","super admin"), OrderSukses);
+router.put("/statusDp/:id", authenticateUser, authorizeRoles("admin","super admin"), OrderStatusDP );
 router.get(
   "/ordersAll",
   authenticateUser,

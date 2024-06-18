@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Reset</title>
+    <style>
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background-color: #fff;
+        width: 70%;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+      .header a {
+        font-size: 1.4em;
+        color: #00466a;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .content {
+        font-size: 1.1em;
+        margin: 20px 0;
+      }
+      .button {
+        display: block;
+        text-align: center;
+        background: #00466a;
+        margin: 20px 13rem;
+        padding: 10px 20px;
+        color: #fff;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .footer {
+        font-size: 0.9em;
+        color: #aaa;
+        margin-top: 20px;
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+      .token {
+        display: block;
+        margin-top: 20px;
+        background: #f4f4f9;
+        padding: 10px;
+        border-radius: 5px;
+        line-height: 1.4rem;
+      }
+      .token-LINK{
+        cursor: pointer;
+        color: #00466a;
+      }
+      .company-info {
+        float: right;
+        text-align: right;
+        font-size: 0.8em;
+        color: #aaa;
+        line-height: 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="#">GedungCangkol.com</a>
+      </div>
+      <div class="content">
+        <p>Hello!......,</p>
+        <p>
+          You are receiving this email because we received a password reset
+          request for your account.
+        </p>
+        <a href=`{{urlClient}}{{token}}{{resEmail}}` class="button">Reset Password</a>
+        <p>This password reset link will expire in 60 minutes.</p>
+        <p>
+          If you did not request a password reset, no further action is
+          required.
+        </p>
+        <h4>Regards,</h4>
+        <div class="token">
+          <p>
+            if you're having trouble clicking the "Reset Password" button, copy
+            end paste the URL, below into your web browser
+            <a class="token-LINK" href=`{{urlClient}}{{token}}{{resEmail}}`>{{urlClient}}{{token}}{{resEmail}}</a>
+          </p>
+        </div>
+        <p class="footer">Regards,<br />Your Brand</p>
+      </div>
+      <hr style="border: none; border-top: 1px solid #eee" />
+      <div class="company-info">
+        <p>Your Brand Inc</p>
+        <p>Gedung Cangkol</p>
+        <p>Cangkool</p>
+      </div>
+    </div>
+  </body>
+</html>
