@@ -41,13 +41,13 @@ const authenticatePelanggan = async (req, res, next) => {
       throw new UnauthenticatedError401("Authentication invalid");
     }
     const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
+    
     // melampirkan pengguna dan izin ke objek req
     req.pelanggan = {
       email: payload.email,
       lastName: payload.lastName,
       firstName: payload.firstName,
-      id: payload.participantId,
+      id: payload.pelangganId,
     };
     next();
   } catch (error) {

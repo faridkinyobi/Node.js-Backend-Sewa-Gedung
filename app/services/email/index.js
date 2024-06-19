@@ -3,9 +3,10 @@ const Mustache = require("mustache");
 const { password, gmail } = require("../../config");
 const fs = require("fs");
 const { urlClient } = require("../../config");
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
+  port: 587,
   secure: false, // Use `true` for port 465, `false` for all other ports
   requireTLS: true,
   auth: {
