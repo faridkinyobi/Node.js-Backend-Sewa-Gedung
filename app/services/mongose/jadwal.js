@@ -162,7 +162,6 @@ const conflictJadwal = async (jadwal) => {
   let manyConflicts = conflict.length > 0;
 
   if (conflict) {
-    console.log(conflict);
     if (manyConflicts) {
       throw new BadRequestError400(
         "Ada kegiatan lain dalam rentang tanggal tersebut"
@@ -173,7 +172,7 @@ const conflictJadwal = async (jadwal) => {
       /event/i.test(jadwal.kegiatan)
     ) {
       throw new BadRequestError400(
-        "Jadwal sudah terpakai dalam tanggal yang sama ----"
+        "Jadwal sudah terpakai dalam tanggal yang sama"
       );
     }
 
@@ -214,129 +213,6 @@ const conflictJadwal = async (jadwal) => {
       "Ada kegiatan lain dalam rentang tanggal tersebut."
     );
   }
-
-  //   if (tglAkhir.getTime()) {
-  //     if (tglAkhir.getTime() === tglMulai.getTime()) {
-  //       throw new BadRequestError400(
-  //         "Tanggal mulai tidak boleh sama dengan tanggal akhir."
-  //       );
-  //     }
-  //     if (/pernikahan/i.test(jadwal.kegiatan)) {
-  //       const result = await Jadwal.find({
-  //         $or: [
-  //           {
-  //             tgl_mulai: {
-  //               $gte: startOfDay,
-  //               $lt: endOfDay,
-  //             },
-  //           },
-  //           {
-  //             tgl_akhir: {
-  //               $gte: tglAkhirStartOfDay,
-  //               $lt: tglAkhirEndOfDay,
-  //             },
-  //           },
-  //         ],
-  //       });
-  //       if (/event/i.test(jadwal.kegiatan)) {
-  //         throw new BadRequestError400(
-  //           "Tidak boleh ada event pada hari yang sama dengan pernikahan."
-  //         );
-  //       }
-  //       const checkkegiatan = result.map((item) => item.kegiatan);
-  //       if (
-  //         /event/i.test(checkkegiatan.toString()) ===
-  //         /pernikahan/i.test(jadwal.kegiatan)
-  //       ) {
-  //         throw new BadRequestError400(
-  //           "Jadwal sudah terpakai dalam tanggal yang sama"
-  //         );
-  //       }
-
-  //       // console.log(checkLebihdari);
-  //       if (result.length > 0) {
-  //         throw new BadRequestError400(
-  //           "Jadwal sudah terpakai dalam tanggal yang sama Pernikahan"
-  //         );
-  //       }
-  //     }
-  //     if (/event/i.test(jadwal.kegiatan)) {
-  //       const result = await Jadwal.find({
-  //         $or: [
-  //           {
-  //             tgl_mulai: {
-  //               $gte: startOfDay,
-  //               $lt: endOfDay,
-  //             },
-  //           },
-  //           {
-  //             tgl_akhir: {
-  //               $gte: tglAkhirStartOfDay,
-  //               $lt: tglAkhirEndOfDay,
-  //             },
-  //           },
-  //         ],
-  //       });
-  //       const checkkegiatan = result.map((item) => item.kegiatan);
-  //       const checkwaktu = result.map((item) => item.waktu);
-  //       if (
-  //         /pernikahan/i.test(checkkegiatan.toString()) ===
-  //         /event/i.test(jadwal.kegiatan)
-  //       ) {
-  //         throw new BadRequestError400(
-  //           "Jadwal sudah terpakai dalam tanggal yang sama ----"
-  //         );
-  //       }
-
-  //       if (checkwaktu.includes(jadwal.waktu)) {
-  //         throw new BadRequestError400(
-  //           `Sudah ada kegiatan dengan waktu "${jadwal.waktu}" pada hari tersebut.`
-  //         );
-  //       }
-
-  //       if (result.length >= 2) {
-  //         if (checkwaktu.toString() === jadwal?.waktu.toLowerCase()) {
-  //           throw new BadRequestError400(
-  //             "Input pada waktu tersebut sudah digunakan."
-  //           );
-  //         }
-  //         throw new BadRequestError400(
-  //           "Tidak boleh ada lebih dari dua event dalam satu hari."
-  //         );
-  //       }
-  //     }
-  //   } else {
-  //     const result = await Jadwal.find({
-  //       $or: [
-  //         {
-  //           tgl_mulai: {
-  //             $gte: startOfDay,
-  //             $lt: endOfDay,
-  //           },
-  //         },
-  //         {
-  //           tgl_akhir: {
-  //             $gte: tglAkhirStartOfDay,
-  //             $lt: tglAkhirEndOfDay,
-  //           },
-  //         },
-  //         {
-  //           tgl_mulai: { $lte: tglAkhir },
-  //           tgl_akhir: { $gte: tglMulai },
-  //         },
-  //         {
-  //           tgl_mulai: { $lte: tglMulai },
-  //           tgl_akhir: { $gte: tglAkhir },
-  //         },
-  //       ],
-  //     });
-  //     // console.log(checkwaktu.includes(jadwal.kegiatan))
-  //     if (result.length > 0) {
-  //       throw new BadRequestError400(
-  //         "Ada kegiatan lain dalam rentang tanggal tersebut"
-  //       );
-  //     }
-  // };
 };
 module.exports = {
   getOneJadwal,

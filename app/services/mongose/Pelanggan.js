@@ -89,10 +89,7 @@ const signupPelanggan = async (req, res) => {
 
   const chek = await Pelanggan.find({ email: email });
 
-  if (!chek)
-    throw new BadRequestError400(
-      "Silakan gunakan alamat email lain email sudah terdaftar"
-    );
+  if (chek) throw new BadRequestError400("email sudah terdaftar");
 
   let result = await Pelanggan.findOne({ email, status: "tidak aktif" });
 
@@ -161,8 +158,8 @@ const forgotPassword = async (req, res) => {
   });
 
   const result = await Pelanggan.updateOne({ resetPasswordLink: token });
-  await forgotPass(email, token);
-
+  const lihat = await forgotPass(email, token);
+  console.log(lihat);
   return result;
 };
 
@@ -185,8 +182,6 @@ const resetPassword = async (req, res) => {
     { password: hashPaswword },
     { new: true, runValidators: true } // Opsi untuk mengembalikan dokumen yang diperbarui
   );
-  // console.log(resultResetPass)
-  // await forgotPass(email, token);
 
   return resultResetPass;
 };
@@ -275,19 +270,19 @@ const checkOut = async (req) => {
   const jadwal = new Jadwal(jadwalData);
   // console.log(jadwal);
   await conflictJadwal(jadwal);
-  
-  const tglMulai = new Date(jadwal.tgl_mulai);// Mengonversi input datetime-local menjadi objek Date
-  const tglAkhir = new Date(jadwal.tgl_akhir);// Mengatur waktu tglMulai ke awal hari (00:00:00.000)
-  tglMulai.setHours(0, 0, 0, 0); 
-  tglAkhir.setHours(23, 59, 59, 999);// Mengatur waktu tglAkhir ke akhir hari (23:59:59.999)
+
+  const tglMulai = new Date(jadwal.tgl_mulai); // Mengonversi input datetime-local menjadi objek Date
+  const tglAkhir = new Date(jadwal.tgl_akhir); // Mengatur waktu tglMulai ke awal hari (00:00:00.000)
+  tglMulai.setHours(0, 0, 0, 0);
+  tglAkhir.setHours(23, 59, 59, 999); // Mengatur waktu tglAkhir ke akhir hari (23:59:59.999)
 
   const tanggal = (() => {
-   
     if (isNaN(tglMulai.getTime()) || isNaN(tglAkhir.getTime())) {
-      throw new BadRequestError400("Invalid date format");  // Memastikan bahwa tgl_mulai dan tgl_akhir valid
+      throw new BadRequestError400("Invalid date format"); // Memastikan bahwa tgl_mulai dan tgl_akhir valid
     }
-    
-    if (tglAkhir.getTime() >= tglMulai.getTime()) { // Perhitungan selisih waktu
+
+    if (tglAkhir.getTime() >= tglMulai.getTime()) {
+      // Perhitungan selisih waktu
       return Math.ceil((tglAkhir - tglMulai) / (1000 * 60 * 60 * 24) + 1);
     } else {
       if (/event/i.test(jadwal.kegiatan)) {
@@ -299,7 +294,6 @@ const checkOut = async (req) => {
   })();
 
   jadwal.lama_sewa = tanggal || 1;
-  // console.log(tanggal);
 
   const historyPaket = {
     title: resultTitel,
@@ -318,9 +312,8 @@ const checkOut = async (req) => {
     ? Math.ceil((tglAkhir - tglMulai) / (1000 * 60 * 60 * 24) + 1)
     : 1;
 
- 
   const chekPenyewa = await Penyewa.findOne({
-    email: penyewaData.email,  //Pemeriksaan penyewa
+    email: penyewaData.email, //Pemeriksaan penyewa
   });
   if (!chekPenyewa) {
     const penyewa = new Penyewa(penyewaData);
@@ -333,7 +326,6 @@ const checkOut = async (req) => {
   const NumberRandom = Math.random().toString(36).slice(2, 7).toUpperCase();
   const orderNumber = `ORD-${year}-${NumberRandom}`;
 
-  
   const total_dp = 2000000;
   const total = harga[0].hargadetail * hasil; // Menghitung total pembayaran berdarkan lama sewa
   const sisa_pembayaran = total - total_dp;
