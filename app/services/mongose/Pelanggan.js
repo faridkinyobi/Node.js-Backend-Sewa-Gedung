@@ -158,8 +158,8 @@ const forgotPassword = async (req, res) => {
   });
 
   const result = await Pelanggan.updateOne({ resetPasswordLink: token });
-  const lihat = await forgotPass(email, token);
-  console.log(lihat);
+  await forgotPass(email, token);
+
   return result;
 };
 
