@@ -13,6 +13,7 @@ const transporter = nodemailer.createTransport({
     pass: password,
   },
 });
+console.log(transporter)
 //aera dkus rtkd glf
 const otpMail = async (email, data) => {
   try {
