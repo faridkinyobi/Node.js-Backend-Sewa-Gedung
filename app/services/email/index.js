@@ -1,15 +1,15 @@
 const nodemailer = require("nodemailer");
 const Mustache = require("mustache");
-const { password, gmail,HostGmail,PortGmailHost,urlClient } = require("../../config");
+const {SmtpPassword, SmtpUsergmail,SmtpPort,SmtpHost,urlClient } = require("../../config");
 const fs = require("fs");
 
 const transporter = nodemailer.createTransport({
-  host: HostGmail,
-  port: PortGmailHost,
-  secure: true, 
+  host: SmtpHost,
+  port: SmtpPort,
+  secure: SmtpPort == 465,
   auth: {
-    user: gmail,
-    pass: password,
+    user: SmtpUsergmail,
+    pass: SmtpPassword,
   },
 });
 
@@ -18,7 +18,7 @@ const otpMail = async (email, data) => {
   try {
     let template = fs.readFileSync("app/views/email/otp.html", "utf8");
     let message = {
-      from: gmail,
+      from: SmtpUsergmail,
       to: email,
       subject: "Otp for registration is: ",
       html: Mustache.render(template, data),
@@ -38,7 +38,7 @@ const forgotPass = async (email, token) => {
     let template = fs.readFileSync("app/views/email/forgot.html", "utf8");
 
     let message = {
-      from: gmail,
+      from: SmtpUsergmail,
       to: email,
       subject: "Otp for registration is: ",
       html: Mustache.render(template, data),
