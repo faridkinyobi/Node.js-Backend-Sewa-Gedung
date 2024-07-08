@@ -7,13 +7,12 @@ const transporter = nodemailer.createTransport({
   host: HostGmail,
   port: PortGmailHost,
   secure: true, 
-  requireTLS: true,
   auth: {
     user: gmail,
     pass: password,
   },
 });
-console.log(transporter)
+
 //aera dkus rtkd glf
 const otpMail = async (email, data) => {
   try {
