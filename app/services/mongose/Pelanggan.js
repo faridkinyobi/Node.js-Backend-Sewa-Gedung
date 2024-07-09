@@ -14,7 +14,7 @@ const {
   BadRequestError400,
   NotFoundError404,
   UnauthorizedError403,
-  UnauthenticatedError401,
+
 } = require("../../error");
 
 const signinPelanggan = async (req) => {
@@ -353,7 +353,17 @@ const checkOut = async (req) => {
 
   return order;
 };
+const deletPelanggan = async (req) => {
+  const { id } = req.params;
 
+  const result = await Pelanggan.findOne({ _id: id });
+
+  if (!result) throw new NotFoundError404(`tidak ada penyewa dengan id ${id}`);
+
+  await result.deleteOne();
+
+  return result;
+};
 module.exports = {
   checkOut,
   signinPelanggan,
@@ -368,4 +378,5 @@ module.exports = {
   activatePelanggan,
   forgotPassword,
   resetPassword,
+  deletPelanggan,
 };

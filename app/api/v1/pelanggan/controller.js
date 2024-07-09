@@ -12,7 +12,8 @@ const {
   UpdatePasswordPelanggan,
   activatePelanggan,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  deletPelanggan
 } = require("../../../services/mongose/Pelanggan");
 
 const signup = async (req, res, next) => {
@@ -93,17 +94,17 @@ const getOne = async (req, res, next) => {
   }
 };
 
-// const update = async (req, res, next) => {
-//   try {
-//     const result = await updatePenyewa(req);
-//     res.status(StatusCodes.OK).json({
-//       data: result,
-//       msg: "successfully",
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+const delet = async (req, res, next) => {
+  try {
+    const result = await deletPelanggan(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+      msg: "successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const getPaketPelanggan = async (req, res, next) => {
   try {
@@ -186,5 +187,6 @@ module.exports = {
   changPasswordPelanggan,
   activePelanggan,
   forgotPasswordPelanggan,
-  resetPasswordPelanggan
+  resetPasswordPelanggan,
+  delet
 };

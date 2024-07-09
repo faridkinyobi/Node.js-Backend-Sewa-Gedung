@@ -14,14 +14,15 @@ const {
   changPasswordPelanggan,
   activePelanggan,
   forgotPasswordPelanggan,
-  resetPasswordPelanggan
+  resetPasswordPelanggan,
+  delet
 } = require("./controller");
 const {
   createpembayranPelanggan,
   updateaPembayaran,
 } = require("../pembayaran/controller");
 const { index } = require("../paymen/controller");
-const { authenticatePelanggan } = require("../../../middlewares/auth");
+const { authenticatePelanggan,authenticateUser,authorizeRoles } = require("../../../middlewares/auth");
 
 router.post("/auth/signup", signup);
 router.post("/auth/changPassword", changPasswordPelanggan);
@@ -43,4 +44,5 @@ router.get(
 );
 router.post("/pembayaran", authenticatePelanggan, createpembayranPelanggan);
 router.put("/pembayaran", authenticatePelanggan,  updateaPembayaran,);
+router.delete("/deletPelanggan", authenticateUser,authorizeRoles("super admin"), delet,);
 module.exports = router;
