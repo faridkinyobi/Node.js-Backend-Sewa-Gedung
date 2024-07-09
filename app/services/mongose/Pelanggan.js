@@ -89,7 +89,7 @@ const signupPelanggan = async (req, res) => {
 
   const check = await Pelanggan.findOne({ email: email });
 
-  if (!check) {
+  if (check) {
     throw new UnauthorizedError403("email sudah terdaftar");
   }
   
