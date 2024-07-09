@@ -87,7 +87,7 @@ const UpdatePasswordPelanggan = async (req) => {
 const signupPelanggan = async (req, res) => {
   const { firstName, lastName, password, email } = req.body;
 
-  const chek = await Pelanggan.find({ email: email });
+  const chek = await Pelanggan.findOne({ email: email });
 
   if (!chek) throw new BadRequestError400("email sudah terdaftar");
 
