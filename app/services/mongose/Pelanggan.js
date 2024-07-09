@@ -87,10 +87,12 @@ const UpdatePasswordPelanggan = async (req) => {
 const signupPelanggan = async (req, res) => {
   const { firstName, lastName, password, email } = req.body;
 
-  const chek = await Pelanggan.findOne({ email: email });
+  const check = await Pelanggan.findOne({ email: email });
 
-  if (!chek) throw new BadRequestError400("email sudah terdaftar");
-
+  if (!check) {
+    throw new UnauthorizedError403("email sudah terdaftar");
+  }
+  
   let result = await Pelanggan.findOne({ email, status: "tidak aktif" });
 
   const hashPaswword = await bcrypt.hash(password, 10);
