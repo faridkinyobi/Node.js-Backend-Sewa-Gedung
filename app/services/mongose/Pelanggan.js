@@ -89,7 +89,7 @@ const signupPelanggan = async (req, res) => {
 
   const chek = await Pelanggan.find({ email: email });
 
-  if (chek) throw new BadRequestError400("email sudah terdaftar");
+  if (!chek) throw new BadRequestError400("email sudah terdaftar");
 
   let result = await Pelanggan.findOne({ email, status: "tidak aktif" });
 
