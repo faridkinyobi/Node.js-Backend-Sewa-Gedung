@@ -114,11 +114,10 @@ const updatePembayaran = async (req) => {
     );
 
   const result = await pembayaran.findOneAndUpdate(
-    { id: id },
+    { _id: id },
     { BuktiPelunasan },
     { new: true, runValidators: true }
   );
-
   if (!result) {
     throw new NotFoundError404(
       `Tidak ada tipe pembayaran dengan ID pelanggan: ${req.pelanggan.id}`

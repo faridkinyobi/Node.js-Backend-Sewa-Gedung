@@ -285,7 +285,7 @@ const checkOut = async (req) => {
 
     if (tglAkhir.getTime() >= tglMulai.getTime()) {
       // Perhitungan selisih waktu
-      return Math.ceil((tglAkhir - tglMulai) / (1000 * 60 * 60 * 24) + 1);
+      return Math.ceil((tglAkhir - tglMulai) / (1000 * 60 * 60 * 24) )
     } else {
       if (/event/i.test(jadwal.kegiatan)) {
         return 12;
@@ -311,7 +311,7 @@ const checkOut = async (req) => {
   };
 
   const hasil = jadwal.tgl_akhir
-    ? Math.ceil((tglAkhir - tglMulai) / (1000 * 60 * 60 * 24) + 1)
+    ? Math.ceil((tglAkhir - tglMulai) / (1000 * 60 * 60 * 24))
     : 1;
 
   const chekPenyewa = await Penyewa.findOne({
@@ -321,7 +321,7 @@ const checkOut = async (req) => {
     const penyewa = new Penyewa(penyewaData);
     await penyewa.save();
   }
-  const penyewa = await Penyewa.findOne();
+  const penyewa = await Penyewa.findOne({email: penyewaData.email} )
 
   const creatDate = new Date();
   const year = creatDate.getFullYear(); //tahun

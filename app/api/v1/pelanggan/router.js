@@ -44,5 +44,5 @@ router.get(
 );
 router.post("/pembayaran", authenticatePelanggan, createpembayranPelanggan);
 router.put("/pembayaran", authenticatePelanggan,  updateaPembayaran,);
-router.delete("/deletPelanggan", authenticateUser,authorizeRoles("super admin"), delet,);
+router.delete("/deletPelanggan/:id", authenticateUser, authorizeRoles("super admin"), delet);
 module.exports = router;
