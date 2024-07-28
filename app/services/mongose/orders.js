@@ -55,11 +55,33 @@ const updateStatusSukses = async (req) => {
     },
     { new: true, runValidators: true }
   );
+  //creat laporan pelunasan
   if (result.status === "sukses") {
     await CreatPemasukanLunas(req,result)
   }
   return result;
 };
+
+const updateStatusPreses = async (req) => {
+  const { id } = req.params;
+  const check = await Order.findOne({ _id: id });
+
+  if (!check) throw new NotFoundError404(`Tidak ada jadwal dengan ID ${id}`);
+
+  const result = await Order.findOneAndUpdate(
+    { _id: id },
+    {
+      status: "proses",
+    },
+    { new: true, runValidators: true }
+  );
+  //creat laporan Uang Muka
+  if (result.status === "uang muka") {
+    await CreatLaporanPemasukanDP(result, req)
+  }
+  return result;
+};
+
 const updateStatusUangDP = async (req) => {
   const { id } = req.params;
   const check = await Order.findOne({ _id: id });
@@ -73,6 +95,7 @@ const updateStatusUangDP = async (req) => {
     },
     { new: true, runValidators: true }
   );
+  //creat laporan Uang Muka
   if (result.status === "uang muka") {
     await CreatLaporanPemasukanDP(result, req)
   }
@@ -112,4 +135,5 @@ module.exports = {
   totalStatusSukses,
   deletOrder,
   updateStatusUangDP,
+  updateStatusPreses
 };

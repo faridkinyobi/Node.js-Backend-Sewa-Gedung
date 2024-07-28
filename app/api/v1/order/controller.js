@@ -6,8 +6,8 @@ const {
   updateStatusGagal,
   updateStatusSukses,
   updateStatusUangDP,
-  totalOrders,
   deletOrder,
+  updateStatusPreses
 } = require("../../../services/mongose/orders.js");
 
 const { StatusCodes } = require("http-status-codes");
@@ -68,6 +68,18 @@ const OrderGagal = async (req, res, next) => {
     next(err);
   }
 };
+
+const OrderPreses = async (req, res, next) => {
+  try {
+    const result = await updateStatusPreses(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const OrderSukses = async (req, res, next) => {
   try {
     const result = await updateStatusSukses(req);
@@ -109,5 +121,6 @@ module.exports = {
   OrderStatusDP,
   OrderSukses,
   totalPending,
-  totalSukses
+  totalSukses,
+  OrderPreses,
 };
